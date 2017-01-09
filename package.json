@@ -1,0 +1,30 @@
+{
+  "name": "map_studio_studio",
+  "version": "1.0.0",
+  "description": "map of the LG channel #studio_studio",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack --watch --progress --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samepant/map_studio_studio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samepant/map_studio_studio/issues"
+  },
+  "homepage": "https://github.com/samepant/map_studio_studio#readme",
+  "devDependencies": {
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2",
+    "browser-sync": "^2.16.1",
+    "browser-sync-webpack-plugin": "^1.1.3",
+    "css-loader": "^0.25.0",
+    "style-loader": "^0.13.1"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.6"
+  }
+}
