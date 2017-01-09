@@ -3,7 +3,7 @@ var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 module.exports = {
     entry: './src/entry.js',
     output: {
-        path: './build',
+        path: './docs',
         filename: 'scripts.js'
     },
     module: {
@@ -15,7 +15,7 @@ module.exports = {
         new BrowserSyncPlugin({
             host: 'localhost',
             port: 3000,
-            server: { baseDir: ['build'] }
+            server: { baseDir: ['docs'] }
           }
         )
     ]
