@@ -4,25 +4,28 @@ html {
 }
 
 body {
-  overflow: hidden;
   background: bisque;
   height: 100%;
   width: 100%;
   margin: 0;
 }
 
-#studio-map-container {
+.studio {
+  border-radius: 50%;
+  background: whitesmoke
+}
+
+#map-container {
   background: coral;
 }
 
 #studio-map {
-  overflow: hidden;
   background: aliceblue;
 }
 
-.studio {
-  border: 2px dashed black;
-  width: 400px;
-  padding: 20px;
-  border-radius: 10px;
+.axis line {
+  fill: none;
+  stroke: aliceblue;
+  shape-rendering: crispEdges;
+  vector-effect: non-scaling-stroke;
 }
