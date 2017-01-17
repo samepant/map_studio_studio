@@ -1,6 +1,6 @@
 /**
- * @license jquery.panzoom.js v3.2.2
- * Updated: Sun Aug 28 2016
+ * @license jquery.panzoom.js v@VERSION
+ * Updated: @DATE
  * Add pan and zoom functionality to any element
  * Copyright (c) timmy willison
  * Released under the MIT license
@@ -529,6 +529,7 @@
       if (typeof matrix === 'string') {
         matrix = this.getMatrix(matrix);
       }
+      
       var scale = +matrix[0];
       var contain = typeof options.contain !== 'undefined' ? options.contain : this.options.contain;
 
@@ -539,38 +540,49 @@
           this.resetDimensions();
           dims = this.dimensions;
         }
-        var spaceWLeft, spaceWRight, scaleDiff;
         var container = this.container;
         var width = dims.width;
         var height = dims.height;
-        var conWidth = container.width;
-        var conHeight = container.height;
+        var parentBorderBottom = parseInt(this.$parent.css('border-bottom-width'), 10);
+        var parentBorderRight = parseInt(this.$parent.css('border-right-width'), 10);
+        var originalElementHeight = 2000;
+        var originalElementWidth = 2000;
+        var conWidth = container.width - parentBorderRight;
+        var conHeight = container.height - parentBorderBottom;
         var zoomAspectW = conWidth / width;
         var zoomAspectH = conHeight / height;
 
-        // If the element is not naturally centered,
-        // assume full space right
-        if (this.$parent.css('textAlign') !== 'center' || $.css(this.elem, 'display') !== 'inline') {
-          // offsetWidth gets us the width without the transform
-          scaleDiff = (width - this.elem.offsetWidth) / 2;
-          spaceWLeft = scaleDiff - dims.border.left;
-          spaceWRight = width - conWidth - scaleDiff + dims.border.right;
-        } else {
-          spaceWLeft = spaceWRight = ((width - conWidth) / 2);
-        }
-        var spaceHTop = ((height - conHeight) / 2) + dims.border.top;
-        var spaceHBottom = ((height - conHeight) / 2) - dims.border.top - dims.border.bottom;
 
+        //Constrain Y-axis position to the container
+        //Be careful about how Origin is being calculated when transform matrix is used
+
+        //Original X origin - Scaled X Origin
+        var originX = originalElementWidth / 2 - width / 2;
+
+        //Original Element Max X + OriginX - ContainerBorderRight
+        
+        var maxXPos = conWidth - originalElementWidth + originX - parentBorderRight;
+        
         if (contain === 'invert' || contain === 'automatic' && zoomAspectW < 1.01) {
-          matrix[4] = Math.max(Math.min(matrix[4], spaceWLeft - dims.border.left), -spaceWRight);
+          matrix[4] = Math.min(Math.max(matrix[4], maxXPos), -originX);
         } else {
-          matrix[4] = Math.min(Math.max(matrix[4], spaceWLeft), -spaceWRight);
+          matrix[4] = Math.max(Math.min(matrix[4], maxXPos), -originX);
         }
+
+
+        //Constrain Y-axis position to the container
+        //Be careful about how Origin is being calculated when transform matrix is used
+
+        //Original Y origin - Scaled Y Origin
+        var originY = originalElementHeight / 2 - height / 2;
+
+        //Original Element Max Y + OriginY - ContainerBorderBottom
+        var maxYPos = conHeight - originalElementHeight + originY - parentBorderBottom;
 
         if (contain === 'invert' || (contain === 'automatic' && zoomAspectH < 1.01)) {
-          matrix[5] = Math.max(Math.min(matrix[5], spaceHTop - dims.border.top), -spaceHBottom);
+          matrix[5] = Math.min(Math.max(matrix[5], maxYPos), -originY);
         } else {
-          matrix[5] = Math.min(Math.max(matrix[5], spaceHTop), -spaceHBottom);
+          matrix[5] = Math.max(Math.min(matrix[5], maxYPos), -originY);
         }
       }
 
@@ -1139,7 +1151,7 @@
       var type = event.type;
 
       // Use proper events
-      if (type === 'pointerdown') {
+      if (type === 'pointerdown') { 
         moveEvent = 'pointermove';
         endEvent = 'pointerup';
       } else if (type === 'touchstart') {
@@ -1188,8 +1200,16 @@
         if (startPageX != null) {
           return;
         }
-        startPageX = event.pageX;
-        startPageY = event.pageY;
+
+        if (typeof event.pageX === 'undefined'){ 
+          startPageX = event.originalEvent.pageX; 
+          startPageY = event.originalEvent.pageY; 
+        }
+
+        else { 
+          startPageX = event.pageX; 
+          startPageY = event.pageY; 
+        }
       };
 
       setStart(event, touches);
@@ -1228,6 +1248,11 @@
 
         if (!coords) {
           coords = e;
+        }
+
+        if (typeof coords.pageX === 'undefined'){ 
+          coords['pageX'] = coords.originalEvent.pageX; 
+          coords['pageY'] = coords.originalEvent.pageY; 
         }
 
         self.pan(

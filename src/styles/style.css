@@ -1,6 +1,11 @@
 html {
   height: 100%;
   width: 100%;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 body {
@@ -10,22 +15,46 @@ body {
   margin: 0;
 }
 
+.buttons {
+  position: fixed;
+  top:0;
+  left:0;
+  z-index: 1;
+}
+
 .studio {
   border-radius: 50%;
-  background: whitesmoke
+  background: whitesmoke;
+  border: 2px solid white;
+  z-index: 1;
+}
+
+.studio:hover {
+  z-index: 2;
+  border: 2px solid white;
 }
 
 #map-container {
-  background: coral;
+  background: bisque;
+  overflow: hidden;
+  margin:0;
 }
 
-#studio-map {
-  background: aliceblue;
+#map-svg{
 }
 
 .axis line {
   fill: none;
   stroke: aliceblue;
-  shape-rendering: crispEdges;
   vector-effect: non-scaling-stroke;
+}
+
+.studio h1 {
+  font-size: 10px
+}
+.studio h2 {
+  font-size: 8px
+}
+.studio p {
+  font-size: 5px
 }

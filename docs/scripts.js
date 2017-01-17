@@ -40,9 +40,8 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
@@ -51,8 +50,7 @@
 
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
@@ -78,8 +76,7 @@
 	}
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
@@ -87,14 +84,13 @@
 
 
 	// module
-	exports.push([module.id, "html {\n  height: 100%;\n  width: 100%;\n}\n\nbody {\n  background: bisque;\n  height: 100%;\n  width: 100%;\n  margin: 0;\n}\n\n.studio {\n  border-radius: 50%;\n  background: whitesmoke\n}\n\n#map-container {\n  background: coral;\n}\n\n#studio-map {\n  background: aliceblue;\n}\n\n.axis line {\n  fill: none;\n  stroke: aliceblue;\n  shape-rendering: crispEdges;\n  vector-effect: non-scaling-stroke;\n}\n", ""]);
+	exports.push([module.id, "html {\n  height: 100%;\n  width: 100%;\n  box-sizing: border-box;\n}\n\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nbody {\n  background: bisque;\n  height: 100%;\n  width: 100%;\n  margin: 0;\n}\n\n.buttons {\n  position: fixed;\n  top:0;\n  left:0;\n  z-index: 1;\n}\n\n.studio {\n  border-radius: 50%;\n  background: whitesmoke;\n  border: 2px solid white;\n  z-index: 1;\n}\n\n.studio:hover {\n  z-index: 2;\n  border: 2px solid white;\n}\n\n#map-container {\n  background: bisque;\n  overflow: hidden;\n  margin:0;\n}\n\n#map-svg{\n}\n\n.axis line {\n  fill: none;\n  stroke: aliceblue;\n  vector-effect: non-scaling-stroke;\n}\n\n.studio h1 {\n  font-size: 10px\n}\n.studio h2 {\n  font-size: 8px\n}\n.studio p {\n  font-size: 5px\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /***/ function(module, exports) {
 
 	/*
@@ -150,8 +146,7 @@
 
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -403,13 +398,12 @@
 
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(36);
-	var Panzoom = __webpack_require__(37);
-	var d3 = __webpack_require__(38);
+	var $ = __webpack_require__(6);
+	var Panzoom = __webpack_require__(7);
+	var d3 = __webpack_require__(8);
 
 	document.addEventListener("DOMContentLoaded", function(e) {
 	  var studioSheetURL = "https://spreadsheets.google.com/feeds/list/1DWrXq6f31keb00q2KTU2xC1lyvpOkcKjXU6RDJ2WFW0/1/public/values?alt=json";
@@ -439,14 +433,16 @@
 	    var windowHeight = $(window).height();
 	    var windowWidth = $(window).width();
 
-	    //make $studioMapContainer centered
+	    /*//make $studioMapContainer centered
 	    $studioMapContainer.css("position", "absolute");
 	    $studioMapContainer.css("height", "windowHeight");
 	    $studioMapContainer.css("top", ($(window).height() - $($studioMapContainer).outerHeight() / 2) + 
 	                                                $(window).scrollTop() + "px");
 	    $studioMapContainer.css("left", ($(window).width() - $($studioMapContainer).outerWidth() / 2) + 
 	                                                $(window).scrollLeft() + "px");
-
+	    */
+	    $studioMapContainer.css("width", (windowWidth + "px")); 
+	    $studioMapContainer.css("height", (windowHeight + "px"));
 	  };
 
 	  function getJSONFromSpreadsheet(url, success) {
@@ -492,10 +488,10 @@
 	  };
 
 	  function createStudios (json) {
-	    var width = 4000;
-	    var height = 4000;
-	    var studioWidth = 500;
-	    var studioHeight = 500;
+	    var width = 2000;
+	    var height = 2000;
+	    var studioWidth = 150;
+	    var studioHeight = 150;
 
 	    //add coordinate info to each studio object
 	    for (var i = 0; i < json.length; i++) {
@@ -562,9 +558,15 @@
 	    //set up PANZOOM
 	    var $studioMap = $("#map-svg")
 	    $studioMap.panzoom({
-	      minScale: 0.5,
+	      startTransform: 'scale(1.2)',
+	      $zoomIn: $(".zoom-in"),
+	      $zoomOut: $(".zoom-out"),
+	      $zoomRange: $(".zoom-range"),
+	      $reset: $(".reset"),
+	      minScale: 1.1,
 	      maxScale: 7,
-	    });
+	      contain: "invert"
+	    }).panzoom("zoom");
 
 
 	    //set up focal point zoom with mouse scroll wheel or touchpad
@@ -575,10 +577,9 @@
 	        var delta = e.delta || e.originalEvent.wheelDelta;
 	        var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
 	        $studioMap.panzoom('zoom', zoomOut, {
-	          increment: 0.03,
+	          increment: 0.04,
 	          animate: false,
 	          focal: e,
-	          contain: "invert"
 	        });
 	      });
 	    })();
@@ -589,8 +590,7 @@
 
 
 /***/ },
-
-/***/ 36:
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10816,13 +10816,12 @@
 
 
 /***/ },
-
-/***/ 37:
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
-	 * @license jquery.panzoom.js v3.2.2
-	 * Updated: Sun Aug 28 2016
+	 * @license jquery.panzoom.js v@VERSION
+	 * Updated: @DATE
 	 * Add pan and zoom functionality to any element
 	 * Copyright (c) timmy willison
 	 * Released under the MIT license
@@ -10832,7 +10831,7 @@
 	(function(global, factory) {
 	  // AMD
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(36) ], __WEBPACK_AMD_DEFINE_RESULT__ = function(jQuery) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(6) ], __WEBPACK_AMD_DEFINE_RESULT__ = function(jQuery) {
 	      return factory(global, jQuery);
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  // CommonJS/Browserify
@@ -11351,6 +11350,7 @@
 	      if (typeof matrix === 'string') {
 	        matrix = this.getMatrix(matrix);
 	      }
+	      
 	      var scale = +matrix[0];
 	      var contain = typeof options.contain !== 'undefined' ? options.contain : this.options.contain;
 
@@ -11361,38 +11361,49 @@
 	          this.resetDimensions();
 	          dims = this.dimensions;
 	        }
-	        var spaceWLeft, spaceWRight, scaleDiff;
 	        var container = this.container;
 	        var width = dims.width;
 	        var height = dims.height;
-	        var conWidth = container.width;
-	        var conHeight = container.height;
+	        var parentBorderBottom = parseInt(this.$parent.css('border-bottom-width'), 10);
+	        var parentBorderRight = parseInt(this.$parent.css('border-right-width'), 10);
+	        var originalElementHeight = 2000;
+	        var originalElementWidth = 2000;
+	        var conWidth = container.width - parentBorderRight;
+	        var conHeight = container.height - parentBorderBottom;
 	        var zoomAspectW = conWidth / width;
 	        var zoomAspectH = conHeight / height;
 
-	        // If the element is not naturally centered,
-	        // assume full space right
-	        if (this.$parent.css('textAlign') !== 'center' || $.css(this.elem, 'display') !== 'inline') {
-	          // offsetWidth gets us the width without the transform
-	          scaleDiff = (width - this.elem.offsetWidth) / 2;
-	          spaceWLeft = scaleDiff - dims.border.left;
-	          spaceWRight = width - conWidth - scaleDiff + dims.border.right;
-	        } else {
-	          spaceWLeft = spaceWRight = ((width - conWidth) / 2);
-	        }
-	        var spaceHTop = ((height - conHeight) / 2) + dims.border.top;
-	        var spaceHBottom = ((height - conHeight) / 2) - dims.border.top - dims.border.bottom;
 
+	        //Constrain Y-axis position to the container
+	        //Be careful about how Origin is being calculated when transform matrix is used
+
+	        //Original X origin - Scaled X Origin
+	        var originX = originalElementWidth / 2 - width / 2;
+
+	        //Original Element Max X + OriginX - ContainerBorderRight
+	        
+	        var maxXPos = conWidth - originalElementWidth + originX - parentBorderRight;
+	        
 	        if (contain === 'invert' || contain === 'automatic' && zoomAspectW < 1.01) {
-	          matrix[4] = Math.max(Math.min(matrix[4], spaceWLeft - dims.border.left), -spaceWRight);
+	          matrix[4] = Math.min(Math.max(matrix[4], maxXPos), -originX);
 	        } else {
-	          matrix[4] = Math.min(Math.max(matrix[4], spaceWLeft), -spaceWRight);
+	          matrix[4] = Math.max(Math.min(matrix[4], maxXPos), -originX);
 	        }
+
+
+	        //Constrain Y-axis position to the container
+	        //Be careful about how Origin is being calculated when transform matrix is used
+
+	        //Original Y origin - Scaled Y Origin
+	        var originY = originalElementHeight / 2 - height / 2;
+
+	        //Original Element Max Y + OriginY - ContainerBorderBottom
+	        var maxYPos = conHeight - originalElementHeight + originY - parentBorderBottom;
 
 	        if (contain === 'invert' || (contain === 'automatic' && zoomAspectH < 1.01)) {
-	          matrix[5] = Math.max(Math.min(matrix[5], spaceHTop - dims.border.top), -spaceHBottom);
+	          matrix[5] = Math.min(Math.max(matrix[5], maxYPos), -originY);
 	        } else {
-	          matrix[5] = Math.min(Math.max(matrix[5], spaceHTop), -spaceHBottom);
+	          matrix[5] = Math.max(Math.min(matrix[5], maxYPos), -originY);
 	        }
 	      }
 
@@ -11961,7 +11972,7 @@
 	      var type = event.type;
 
 	      // Use proper events
-	      if (type === 'pointerdown') {
+	      if (type === 'pointerdown') { 
 	        moveEvent = 'pointermove';
 	        endEvent = 'pointerup';
 	      } else if (type === 'touchstart') {
@@ -12010,8 +12021,16 @@
 	        if (startPageX != null) {
 	          return;
 	        }
-	        startPageX = event.pageX;
-	        startPageY = event.pageY;
+
+	        if (typeof event.pageX === 'undefined'){ 
+	          startPageX = event.originalEvent.pageX; 
+	          startPageY = event.originalEvent.pageY; 
+	        }
+
+	        else { 
+	          startPageX = event.pageX; 
+	          startPageY = event.pageY; 
+	        }
 	      };
 
 	      setStart(event, touches);
@@ -12050,6 +12069,11 @@
 
 	        if (!coords) {
 	          coords = e;
+	        }
+
+	        if (typeof coords.pageX === 'undefined'){ 
+	          coords['pageX'] = coords.originalEvent.pageX; 
+	          coords['pageY'] = coords.originalEvent.pageY; 
 	        }
 
 	        self.pan(
@@ -12124,8 +12148,7 @@
 	}));
 
 /***/ },
-
-/***/ 38:
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// https://d3js.org Version 4.4.1. Copyright 2017 Mike Bostock.
@@ -28524,5 +28547,4 @@
 
 
 /***/ }
-
-/******/ });
+/******/ ]);

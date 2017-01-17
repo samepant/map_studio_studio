@@ -30,14 +30,16 @@ document.addEventListener("DOMContentLoaded", function(e) {
     var windowHeight = $(window).height();
     var windowWidth = $(window).width();
 
-    //make $studioMapContainer centered
+    /*//make $studioMapContainer centered
     $studioMapContainer.css("position", "absolute");
     $studioMapContainer.css("height", "windowHeight");
     $studioMapContainer.css("top", ($(window).height() - $($studioMapContainer).outerHeight() / 2) + 
                                                 $(window).scrollTop() + "px");
     $studioMapContainer.css("left", ($(window).width() - $($studioMapContainer).outerWidth() / 2) + 
                                                 $(window).scrollLeft() + "px");
-
+    */
+    $studioMapContainer.css("width", (windowWidth + "px")); 
+    $studioMapContainer.css("height", (windowHeight + "px"));
   };
 
   function getJSONFromSpreadsheet(url, success) {
@@ -83,10 +85,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
   };
 
   function createStudios (json) {
-    var width = 4000;
-    var height = 4000;
-    var studioWidth = 500;
-    var studioHeight = 500;
+    var width = 2000;
+    var height = 2000;
+    var studioWidth = 150;
+    var studioHeight = 150;
 
     //add coordinate info to each studio object
     for (var i = 0; i < json.length; i++) {
@@ -153,9 +155,15 @@ document.addEventListener("DOMContentLoaded", function(e) {
     //set up PANZOOM
     var $studioMap = $("#map-svg")
     $studioMap.panzoom({
-      minScale: 0.5,
+      startTransform: 'scale(1.2)',
+      $zoomIn: $(".zoom-in"),
+      $zoomOut: $(".zoom-out"),
+      $zoomRange: $(".zoom-range"),
+      $reset: $(".reset"),
+      minScale: 1.1,
       maxScale: 7,
-    });
+      contain: "invert"
+    }).panzoom("zoom");
 
 
     //set up focal point zoom with mouse scroll wheel or touchpad
@@ -166,10 +174,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
         var delta = e.delta || e.originalEvent.wheelDelta;
         var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
         $studioMap.panzoom('zoom', zoomOut, {
-          increment: 0.03,
+          increment: 0.04,
           animate: false,
           focal: e,
-          contain: "invert"
         });
       });
     })();
