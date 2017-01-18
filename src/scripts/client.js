@@ -98,6 +98,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
       eachStudio.y = (Math.random() * (height - studioHeight));
     }
 
+    //setup drag
+    var drag = d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+
     //create an svg on the dom
     var studioMap = d3.select("#map-container").append("svg")
         .attr("width", width)
@@ -128,19 +134,52 @@ document.addEventListener("DOMContentLoaded", function(e) {
         .attr("x2", width)
         .attr("y2", function(d) { return d; });
         
-    //the real deal studio maker using foreign object cause all the text
-    container.append("g")
-      .selectAll("foreignObject")
-        .data(json)
-      .enter().append("foreignObject")
+    //the real deal studio maker (forms the group)
+    var studioGroups = container.append("g")
+        .selectAll(".studioGroup")
+        .data(json);
+
+    //the svg group
+    var studioGroupsEnter = studioGroups.enter().append("g")
+        .attr("class", "studioGroup")
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" })
+        .call(drag);
+
+    //the background circle
+    studioGroupsEnter.append("circle")
+        .attr("class", "studio-circle")
+        //.attr("cx", function(d) { return (d.x + (studioWidth / 2.5)) })
+        //.attr("cy", function(d) { return (d.y + (studioHeight / 2.5)) })
+        .attr("r", (studioWidth / 1.8))
+        .attr("style", "stroke: white; stroke-width: 4; fill: whitesmoke");
+
+    //the studio info itself
+    studioGroupsEnter.append("foreignObject")
         .attr("width", studioWidth)
         .attr("height", studioHeight)
-        .attr("x", function(d) { return d.x })
-        .attr("y", function(d) { return d.y })
+        //.attr("x", function(d) { return d.x })
+        //.attr("y", function(d) { return d.y })
       .append("xhtml:body")
         .attr("class", "studio")
-        .html(function(d) { return d.html });
+        .html(function(d) { return d.html });     
+    
+    //drag functions
+    function dragstarted(d) {
+      d3.select(this).raise().classed("active", true);
+    }
+
+    function dragged(d) {
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        d3.select(this).attr("transform", "translate(" + d.x + "," + d.y + ")");
+    }
+
+    function dragended(d) {
+      d3.select(this).classed("active", false);
+    }
+
   };  
+
 
   //get JSON and clean the object for handlebars.js
   getJSONFromSpreadsheet(studioSheetURL, function (data) {
@@ -181,6 +220,18 @@ document.addEventListener("DOMContentLoaded", function(e) {
       });
     })();
 
+    //listener for shift key which shuts off panzoom so we can drag the studios
+    $(window).keydown(function (event) {
+      if (event.which === 16) {
+        $studioMap.panzoom("disable");
+      }
+    });
+
+    $(window).keyup(function (event) {
+       if (event.which === 16) {
+        $studioMap.panzoom("enable");
+      }
+    });
   });
 
 });

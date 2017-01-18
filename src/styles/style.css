@@ -23,16 +23,11 @@ body {
 }
 
 .studio {
-  border-radius: 50%;
-  background: whitesmoke;
-  border: 2px solid white;
-  z-index: 1;
+  background: none;
 }
 
-.studio:hover {
-  z-index: 2;
-  border: 2px solid white;
-}
+
+
 
 #map-container {
   background: bisque;
@@ -50,11 +45,14 @@ body {
 }
 
 .studio h1 {
-  font-size: 10px
+  font-size: 10px;
+  background: white;
 }
 .studio h2 {
-  font-size: 8px
+  font-size: 8px;
+  background: white;
 }
 .studio p {
-  font-size: 5px
+  font-size: 5px;
+  background: white;
 }

@@ -84,7 +84,7 @@
 
 
 	// module
-	exports.push([module.id, "html {\n  height: 100%;\n  width: 100%;\n  box-sizing: border-box;\n}\n\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nbody {\n  background: bisque;\n  height: 100%;\n  width: 100%;\n  margin: 0;\n}\n\n.buttons {\n  position: fixed;\n  top:0;\n  left:0;\n  z-index: 1;\n}\n\n.studio {\n  border-radius: 50%;\n  background: whitesmoke;\n  border: 2px solid white;\n  z-index: 1;\n}\n\n.studio:hover {\n  z-index: 2;\n  border: 2px solid white;\n}\n\n#map-container {\n  background: bisque;\n  overflow: hidden;\n  margin:0;\n}\n\n#map-svg{\n}\n\n.axis line {\n  fill: none;\n  stroke: aliceblue;\n  vector-effect: non-scaling-stroke;\n}\n\n.studio h1 {\n  font-size: 10px\n}\n.studio h2 {\n  font-size: 8px\n}\n.studio p {\n  font-size: 5px\n}\n", ""]);
+	exports.push([module.id, "html {\n  height: 100%;\n  width: 100%;\n  box-sizing: border-box;\n}\n\n*, *:before, *:after {\n  box-sizing: inherit;\n}\n\nbody {\n  background: bisque;\n  height: 100%;\n  width: 100%;\n  margin: 0;\n}\n\n.buttons {\n  position: fixed;\n  top:0;\n  left:0;\n  z-index: 1;\n}\n\n.studio {\n  background: none;\n}\n\n\n\n\n#map-container {\n  background: bisque;\n  overflow: hidden;\n  margin:0;\n}\n\n#map-svg{\n}\n\n.axis line {\n  fill: none;\n  stroke: aliceblue;\n  vector-effect: non-scaling-stroke;\n}\n\n.studio h1 {\n  font-size: 10px;\n  background: white;\n}\n.studio h2 {\n  font-size: 8px;\n  background: white;\n}\n.studio p {\n  font-size: 5px;\n  background: white;\n}\n", ""]);
 
 	// exports
 
@@ -501,6 +501,12 @@
 	      eachStudio.y = (Math.random() * (height - studioHeight));
 	    }
 
+	    //setup drag
+	    var drag = d3.drag()
+	      .on("start", dragstarted)
+	      .on("drag", dragged)
+	      .on("end", dragended);
+
 	    //create an svg on the dom
 	    var studioMap = d3.select("#map-container").append("svg")
 	        .attr("width", width)
@@ -531,19 +537,52 @@
 	        .attr("x2", width)
 	        .attr("y2", function(d) { return d; });
 	        
-	    //the real deal studio maker using foreign object cause all the text
-	    container.append("g")
-	      .selectAll("foreignObject")
-	        .data(json)
-	      .enter().append("foreignObject")
+	    //the real deal studio maker (forms the group)
+	    var studioGroups = container.append("g")
+	        .selectAll(".studioGroup")
+	        .data(json);
+
+	    //the svg group
+	    var studioGroupsEnter = studioGroups.enter().append("g")
+	        .attr("class", "studioGroup")
+	        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" })
+	        .call(drag);
+
+	    //the background circle
+	    studioGroupsEnter.append("circle")
+	        .attr("class", "studio-circle")
+	        //.attr("cx", function(d) { return (d.x + (studioWidth / 2.5)) })
+	        //.attr("cy", function(d) { return (d.y + (studioHeight / 2.5)) })
+	        .attr("r", (studioWidth / 1.8))
+	        .attr("style", "stroke: white; stroke-width: 4; fill: whitesmoke");
+
+	    //the studio info itself
+	    studioGroupsEnter.append("foreignObject")
 	        .attr("width", studioWidth)
 	        .attr("height", studioHeight)
-	        .attr("x", function(d) { return d.x })
-	        .attr("y", function(d) { return d.y })
+	        //.attr("x", function(d) { return d.x })
+	        //.attr("y", function(d) { return d.y })
 	      .append("xhtml:body")
 	        .attr("class", "studio")
-	        .html(function(d) { return d.html });
+	        .html(function(d) { return d.html });     
+	    
+	    //drag functions
+	    function dragstarted(d) {
+	      d3.select(this).raise().classed("active", true);
+	    }
+
+	    function dragged(d) {
+	        d.x += d3.event.dx;
+	        d.y += d3.event.dy;
+	        d3.select(this).attr("transform", "translate(" + d.x + "," + d.y + ")");
+	    }
+
+	    function dragended(d) {
+	      d3.select(this).classed("active", false);
+	    }
+
 	  };  
+
 
 	  //get JSON and clean the object for handlebars.js
 	  getJSONFromSpreadsheet(studioSheetURL, function (data) {
@@ -584,6 +623,18 @@
 	      });
 	    })();
 
+	    //listener for shift key which shuts off panzoom so we can drag the studios
+	    $(window).keydown(function (event) {
+	      if (event.which === 16) {
+	        $studioMap.panzoom("disable");
+	      }
+	    });
+
+	    $(window).keyup(function (event) {
+	       if (event.which === 16) {
+	        $studioMap.panzoom("enable");
+	      }
+	    });
 	  });
 
 	});
