@@ -8,7 +8,21 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: 'style!css' }
+            { test: /\.css$/, loader: 'style!css' },
+            {
+              test: /\.(jpg|png)$/,
+              loader: 'url-loader',
+              options: {
+                limit: 25000,
+              },
+            },
+            {
+              test: /\.()$/,
+              loader: 'file-loader',
+              options: {
+                name: './docs/images/[path][name].[hash].[ext]',
+              },
+            }
         ]
     },
     plugins: [

@@ -110,6 +110,14 @@ document.addEventListener("DOMContentLoaded", function(e) {
         .attr("height", height)
         .attr("id", "map-svg");
 
+    // filter for blur
+
+    var filter = studioMap.append("defs")
+        .append("filter")
+          .attr("id", "blur")
+        .append("feGaussianBlur")
+          .attr("stdDeviation", 5);
+
     //container for all the studios
     var container = studioMap.append("g");
 
@@ -151,7 +159,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
         //.attr("cx", function(d) { return (d.x + (studioWidth / 2.5)) })
         //.attr("cy", function(d) { return (d.y + (studioHeight / 2.5)) })
         .attr("r", (studioWidth / 1.8))
-        .attr("style", "stroke: white; stroke-width: 4; fill: whitesmoke");
+        .attr("style", "stroke-width: 4; fill: whitesmoke")
+        .attr("filter", "url(#blur)") ;
 
     //the studio info itself
     studioGroupsEnter.append("foreignObject")
@@ -165,16 +174,24 @@ document.addEventListener("DOMContentLoaded", function(e) {
     
     //drag functions
     function dragstarted(d) {
+      d3.selectAll("body")
+      .classed("grabbing", function (d, i) {
+        return !d3.select(this).classed("grabbing");
+      });
       d3.select(this).raise().classed("active", true);
     }
 
     function dragged(d) {
-        d.x += d3.event.dx;
-        d.y += d3.event.dy;
-        d3.select(this).attr("transform", "translate(" + d.x + "," + d.y + ")");
+      d.x += d3.event.dx;
+      d.y += d3.event.dy;
+      d3.select(this).attr("transform", "translate(" + d.x + "," + d.y + ")");
     }
 
     function dragended(d) {
+      d3.selectAll("body")
+      .classed("grabbing", function (d, i) {
+        return !d3.select(this).classed("grabbing");
+      });
       d3.select(this).classed("active", false);
     }
 
@@ -224,12 +241,16 @@ document.addEventListener("DOMContentLoaded", function(e) {
     $(window).keydown(function (event) {
       if (event.which === 16) {
         $studioMap.panzoom("disable");
+
+        $("body").addClass("grab");
       }
     });
 
     $(window).keyup(function (event) {
        if (event.which === 16) {
         $studioMap.panzoom("enable");
+
+        $("body").removeClass("grab");
       }
     });
   });

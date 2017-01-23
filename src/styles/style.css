@@ -13,20 +13,40 @@ body {
   height: 100%;
   width: 100%;
   margin: 0;
+  cursor: url(../images/pan-cursor.png), auto;
 }
 
-.buttons {
+.grab {
+  cursor: url(../images/grab.png), auto;
+}
+
+.grabbing {
+  cursor: url(../images/grabbing.png), auto;
+}
+
+.dash {
   position: fixed;
-  top:0;
-  left:0;
+  height: 200px;
+  width: 200px;
+  bottom: 5px;
+  left: 5px;
   z-index: 1;
+  background: url(../images/studio-studio.png);
+  background-size: 100%;
+  padding-left: 60px;
 }
 
 .studio {
   background: none;
 }
 
+.studio-circle {
+  stroke: white;
+}
 
+.active .studio-circle {
+  stroke: orchid;
+}
 
 
 #map-container {
