@@ -3,7 +3,7 @@ var Panzoom = require("./panzoom.js");
 var d3 = require("d3");
 
 document.addEventListener("DOMContentLoaded", function(e) {
-  var studioSheetURL = "https://spreadsheets.google.com/feeds/list/1DWrXq6f31keb00q2KTU2xC1lyvpOkcKjXU6RDJ2WFW0/1/public/values?alt=json";
+  var studioSheetURL = "https://spreadsheets.google.com/feeds/list/1PVTjsY7ze4LShQjF8jH3sz9FUzoOXvw71T6gTWSVQAo/1/public/values?alt=json";
   var $studioMapContainer = $("#map-container");
   var studioList;
 
@@ -18,30 +18,17 @@ document.addEventListener("DOMContentLoaded", function(e) {
     return element;
   }
 
-  /* make $studioMapContainer giant in preparation of PANZOOM
-  /
-  /   panzoom lets you pan and zoom any html element,
-  /   but you can't pan on the outside of the element,
-  /   so we gotta make it really big
-  /
-  */
+  // make $studioMapContainer the size of the window
 
   function setupContainer () {
     var windowHeight = $(window).height();
     var windowWidth = $(window).width();
 
-    /*//make $studioMapContainer centered
-    $studioMapContainer.css("position", "absolute");
-    $studioMapContainer.css("height", "windowHeight");
-    $studioMapContainer.css("top", ($(window).height() - $($studioMapContainer).outerHeight() / 2) + 
-                                                $(window).scrollTop() + "px");
-    $studioMapContainer.css("left", ($(window).width() - $($studioMapContainer).outerWidth() / 2) + 
-                                                $(window).scrollLeft() + "px");
-    */
     $studioMapContainer.css("width", (windowWidth + "px")); 
     $studioMapContainer.css("height", (windowHeight + "px"));
   };
 
+  //get json from google spreadsheet
   function getJSONFromSpreadsheet(url, success) {
 
     var request = new XMLHttpRequest();
@@ -72,7 +59,15 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     for (var i = 0; i < infoRaw.length; i++) {
       var studioRaw = infoRaw[i];
-      var htmlString = "<h1>" + studioRaw.gsx$name.$t + "</h1><h2>Location</h2><p>" + studioRaw.gsx$location.$t + "</p><h2>Practical knowledge</h2><p>" + studioRaw.gsx$practical.$t + "</p><h2>Conceptual interests/questions</h2><p>" + studioRaw.gsx$conceptual.$t + "</p>";
+
+      //make title a link if link exists -- there has to be a better way...
+      if (studioRaw.gsx$link.$t) {
+        var htmlString = '<a href="' + studioRaw.gsx$link.$t + '" target="none"><h1>' + studioRaw.gsx$name.$t + "</h1></a><h2>Location</h2><p>" + studioRaw.gsx$location.$t + "</p><h2>Practical knowledge</h2><p>" + studioRaw.gsx$practical.$t + "</p><h2>Conceptual interests/questions</h2><p>" + studioRaw.gsx$conceptual.$t + "</p>";
+      
+      } else {
+        var htmlString = "<h1>" + studioRaw.gsx$name.$t + "</h1><h2>Location</h2><p>" + studioRaw.gsx$location.$t + "</p><h2>Practical knowledge</h2><p>" + studioRaw.gsx$practical.$t + "</p><h2>Conceptual interests/questions</h2><p>" + studioRaw.gsx$conceptual.$t + "</p>";
+      }
+
       var studioClean = {
         'timestamp': studioRaw.gsx$timestamp.$t,
         'html': htmlString
