@@ -25,15 +25,51 @@ body {
 }
 
 .dash {
+  pointer-events: none;
   position: fixed;
   height: 200px;
-  width: 200px;
-  bottom: 5px;
-  left: 5px;
+  min-width: 200px;
+  bottom: 10px;
+  left: 10px;
   z-index: 1;
   background: url(../images/studio-studio.png);
-  background-size: 100%;
-  padding-left: 60px;
+  background-size: 200px 200px;
+  background-repeat: no-repeat;
+  padding: 85px 0 0 60px;
+}
+
+.dash-item {
+  float: left;
+  position: relative;
+  margin-right: 50px;
+}
+
+.dash-item img {
+  height: 60px;
+}
+
+.dash-item label{
+  position: absolute;
+  top: -130%;
+  left: 24%;
+  width: 168px;
+  transform: rotateZ(-40deg);
+  -webkit-transform: rotateZ(-40deg);
+  background: rgba(255, 255, 255, 0.8);
+  padding-left: 4px;
+  font-size: 20px;
+}
+
+.about label {
+  transform: none;
+  -webkit-transform: none;
+  width: 300px;
+  font-size: 16px;
+}
+
+.studio-name {
+  color: orchid;
+  font-style: italic;
 }
 
 .studio {

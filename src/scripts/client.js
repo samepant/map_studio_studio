@@ -159,8 +159,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
         //.attr("cx", function(d) { return (d.x + (studioWidth / 2.5)) })
         //.attr("cy", function(d) { return (d.y + (studioHeight / 2.5)) })
         .attr("r", (studioWidth / 1.8))
-        .attr("style", "stroke-width: 4; fill: whitesmoke")
-        .attr("filter", "url(#blur)") ;
+        .attr("filter", "url(#blur)")
+        .attr("style", "stroke-width: 4; fill: whitesmoke");
 
     //the studio info itself
     studioGroupsEnter.append("foreignObject")
@@ -212,10 +212,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
     var $studioMap = $("#map-svg")
     $studioMap.panzoom({
       startTransform: 'scale(1.2)',
-      $zoomIn: $(".zoom-in"),
-      $zoomOut: $(".zoom-out"),
-      $zoomRange: $(".zoom-range"),
-      $reset: $(".reset"),
       minScale: 1.1,
       maxScale: 7,
       contain: "invert"
@@ -238,11 +234,55 @@ document.addEventListener("DOMContentLoaded", function(e) {
     })();
 
     //listener for shift key which shuts off panzoom so we can drag the studios
+    //also listeners for arrow keys and zoom keys
     $(window).keydown(function (event) {
+      //shift key
       if (event.which === 16) {
         $studioMap.panzoom("disable");
 
         $("body").addClass("grab");
+      }
+
+      //left arrow
+      if (event.which === 37) {
+        $studioMap.panzoom("pan", 50, 0, { relative: true });
+      }
+
+      //right arrow
+      if (event.which === 39) {
+        $studioMap.panzoom("pan", -50, 0, { relative: true });
+      }
+
+      //up arrow
+      if (event.which === 38) {
+        $studioMap.panzoom("pan", 0, 50, { relative: true });
+      }
+
+      //down arrow
+      if (event.which === 40) {
+        $studioMap.panzoom("pan", 0, -50, { relative: true });
+      }
+
+      //dash key
+      if (event.which === 187) {
+        //center zoom-out in middle of screen
+        var coords = {};
+        coords.clientX = window.innerWidth / 2;
+        coords.clientY = window.innerHeight / 2;
+        $studioMap.panzoom("zoom", false, {
+          focal: coords
+        });
+      }
+
+      //equals key
+      if (event.which === 189) {
+        //center zoom-in in middle of screen
+        var coords = {};
+        coords.clientX = window.innerWidth / 2;
+        coords.clientY = window.innerHeight / 2;
+        $studioMap.panzoom("zoom", true, {
+          focal: coords
+        });
       }
     });
 
