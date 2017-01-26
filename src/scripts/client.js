@@ -3,7 +3,7 @@ var Panzoom = require("./panzoom.js");
 var d3 = require("d3");
 
 document.addEventListener("DOMContentLoaded", function(e) {
-  var studioSheetURL = "https://spreadsheets.google.com/feeds/list/1PVTjsY7ze4LShQjF8jH3sz9FUzoOXvw71T6gTWSVQAo/1/public/values?alt=json";
+  var studioSheetURL = "https://spreadsheets.google.com/feeds/list/1DWrXq6f31keb00q2KTU2xC1lyvpOkcKjXU6RDJ2WFW0/1/public/values?alt=json";
   var $studioMapContainer = $("#map-container");
   var studioList;
 
